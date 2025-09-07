@@ -58,6 +58,7 @@
 % \usepackage{thmtools} % required for autoref to lemmas
 \usepackage{algorithm}
 \usepackage{algorithmicx}
+\usepackage{algpseudocodex}
 \usepackage{tabularx}
 
 \usepackage{mathtools}
@@ -500,7 +501,7 @@ CIRCT is equipped with an export pass to B\textsc{tor}2~\cite{amelia_thesis}, wh
 \christos{similar to previous subsection; I think this can be shortened and made more relevant to our tool}
 
 \begin{figure*}
-  \begin{subfigure}[t]{0.48\textwidth}
+  \begin{subfigure}[t]{0.44\textwidth}
   \begin{xdsl}
   hw.module @counter(in %clk: !seq.clock,
       in %reset: i1, out count: i32) {
@@ -518,7 +519,7 @@ CIRCT is equipped with an export pass to B\textsc{tor}2~\cite{amelia_thesis}, wh
   \label{lst:counter}
   \end{subfigure}
   \hfill
-  \begin{subfigure}[t]{0.48\textwidth}
+  \begin{subfigure}[t]{0.44\textwidth}
   \begin{xdsl}
   hw.module @counter(in %clk: !seq.clock,
       in %reset: i1, in %reg_state : i32,
@@ -534,10 +535,11 @@ CIRCT is equipped with an export pass to B\textsc{tor}2~\cite{amelia_thesis}, wh
   \caption{Registers are removed and replaced with module ports. The final input, \texttt{reg\_state}, represents the current state of the register, which is provided to the module. The final output, \texttt{reg\_next}, represents the state the register will assume in the next clock cycle, and is produced by the module.}
   \label{lst:counter-ext-regs}
   \end{subfigure}
-  \noindent\begin{subfigure}[t]{0.48\textwidth}
+  \noindent\begin{subfigure}[t]{0.44\textwidth}
   \begin{xdsl}
   
-    %0 = verif.bmc bound 20 num_regs 1 init {
+    %0 = verif.bmc bound 20 num_regs 1 
+    init {
       %false = hw.constant false
       %4     = seq.to_clock %false
       verif.yield %4 : !seq.clock
@@ -549,7 +551,8 @@ CIRCT is equipped with an export pass to B\textsc{tor}2~\cite{amelia_thesis}, wh
       %6    = seq.to_clock %5
       verif.yield %6 : !seq.clock
     } circuit {
-    ^bb0(%arg0: !seq.clock, %arg1: i1, %arg2: i32):
+    ^bb0(%arg0: !seq.clock, %arg1: i1,
+        %arg2: i32):
       %c1 = hw.constant 1 : i32
       %4      = comb.add %arg2, %c1 : i32
       verif.assert <safety property> : i1
@@ -560,7 +563,7 @@ CIRCT is equipped with an export pass to B\textsc{tor}2~\cite{amelia_thesis}, wh
     \label{lst:counter-bmc-op}
   \end{subfigure}
   \hfill
-  \noindent\begin{subfigure}[t]{0.48\textwidth}
+  \noindent\begin{subfigure}[t]{0.44\textwidth}
   \begin{xdsl}
   
   func.func @bmc_circuit(
@@ -628,7 +631,6 @@ Finally, we lower this algorithmic representation to an LLVM program that execut
 
 While our prototype implements a simple BMC algorithm, our explicit representation of BMC problems as an IR allows fine-grained, modular algorithmic control not previously available in a unified framework.
 
-\newpage
 % \autoref{fig:bmc-pipeline} demonstrates the RTL pipeline, which consists of a series of incremental lowerings through abstraction levels.
 % We use a novel, explicit representation of bounded model checking problems that allows fine-grained control over clock behavior in multi-clock designs.
 % This representation is then lowered to the SMT dialect.
@@ -856,33 +858,33 @@ se(\_ : i_{n}) &= \left\{0, 1, 2, 3, \ldots, 2^{n}-2, 2^{n}-1\right\}
 The extraction algorithm is described in \Cref{fig:fsm_extraction_workflow}.
 The algorithm is explained in pseudo-code in \Cref{alg:fsm_extraction}
 
-% \begin{algorithm}[H]
-% \caption{Simplified FSM Extraction from a Hardware Module}
-% \label{alg:fsm_extraction}
-% \begin{algorithmic}[1]
-% \Function{ExtractFSM}{$M : hw.module$}
-%   \State initialRegVal : $i_s$ := getInitialRegVal(M)
-%   \State nextState : $i_i \to i_s \to i_s$ := getNextStateLogic(M)
-%   \State output : $i_s \to i_o$ := getOutputLogic(M)
-%   \State workList : List(Int) := [initalRegVal]
-%   \State visitedStates : Set(Int) := \{\}
-%   \State fsm : FSM := new FSM()
-%   \While{workList $\neq$ []}
-%   \State cs : $i_s$ := workList.pop()
-%   \State $visitedState \gets visitedStates \cup \{cs\}$
-%    \State S : State := fsm.addState(cs, output(cs))
-%    \State pns : Set($i_s$) := se(nextState(\_, cs))
-%    \For{$ns : i_S \in pns$}
-%      \State S.addTransition(ns, $i \mapsto nextState(i, cs) = ns$)
-%      \If{$ns \notin visitedStates$}
-%        \State workList.pushBack(ns)
-%      \EndIf
-%    \EndFor
-% \EndWhile
-%   \State \Return fsm
-% \EndFunction
-% \end{algorithmic}
-% \end{algorithm}
+\begin{algorithm}[H]
+\caption{Simplified FSM Extraction from a Hardware Module}
+\label{alg:fsm_extraction}
+\begin{algorithmic}[1]
+\Function{ExtractFSM}{$M : hw.module$}
+  \State initialRegVal : $i_s$ := getInitialRegVal(M)
+  \State nextState : $i_i \to i_s \to i_s$ := getNextStateLogic(M)
+  \State output : $i_s \to i_o$ := getOutputLogic(M)
+  \State workList : List(Int) := [initalRegVal]
+  \State visitedStates : Set(Int) := \{\}
+  \State fsm : FSM := new FSM()
+  \While{workList $\neq$ []}
+  \State cs : $i_s$ := workList.pop()
+  \State $visitedState \gets visitedStates \cup \{cs\}$
+   \State S : State := fsm.addState(cs, output(cs))
+   \State pns : Set($i_s$) := se(nextState(\_, cs))
+   \For{$ns : i_S \in pns$}
+     \State S.addTransition(ns, $i \mapsto nextState(i, cs) = ns$)
+     \If{$ns \notin visitedStates$}
+       \State workList.pushBack(ns)
+     \EndIf
+   \EndFor
+\EndWhile
+  \State \Return fsm
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
 
 
 \subsection{Performance of FSM Extraction}
@@ -918,7 +920,7 @@ The verification process is described in \Cref{fig:fsm_extraction_workflow}.
 \end{figure*}
 
 \begin{figure}
-  \includegraphics{rtl-to-fsm.pdf}
+  \includegraphics[width=0.8\columnwidth]{rtl-to-fsm.pdf}
     \caption{When extracting an FSM from an RTL representation, 
       we map the circuit's functional units (on the left) to the states in the FSM (on the right). For a modulo-4 counter, 
       the RTL design contains an \textit{implicit} FSM composed of a state register, next-state logic, and output logic.
@@ -931,7 +933,7 @@ The verification process is described in \Cref{fig:fsm_extraction_workflow}.
 \centering
 \caption{FSM Conversion and Verification Summary on OpenTitan FSMs}
 \label{tab:fsm_conversion}
-\begin{tabular}{l S[table-format=4.0] S[table-format=3.0] S[table-format=1.4] l l}
+\begin{tabular}{c c c c c c}
 \toprule
 \textbf{FSM Name} & {\textbf{SV LoC}} & {\textbf{MLIR LoC}} & {\textbf{Time (s)}} & \textbf{Status} & \textbf{Details} \\
 \midrule
@@ -1205,7 +1207,7 @@ None of these transformations took more than 2 seconds to finish.
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=\columnwidth]{methodology.pdf}
+  \includegraphics[width=0.8\columnwidth]{methodology.pdf}
   \caption{We compare the performance of \toolname{}'s RTL engine against 1) AVR, after lowering the designs to B\textsc{tor}2 and 2) ABC and rIC3, after lowering the designs to AIGER.
            We compare the performance of \toolname{}'s FSM engine, which uses Z3, against AVR and rIC3.}
   \label{fig:eval-structure}
@@ -1253,16 +1255,22 @@ always 20. We include only one FSM to avoid skewing our findings towards a speci
 Rocket RISC-V chip~\cite{ucb2016rocket}. Our model checkers check that if a non-overflowing multiplication was requested, the next output is the result of this multiplication.
 
 \begin{figure}
-  \centering
-  \begin{subfigure}{\columnwidth}
-  \includegraphics[width=\columnwidth]{bmc-plots/mitre.pdf}
-  \subcaption[]{Time to model check \textbf{miter}.}\label{fig:benchmark-lin-s}
-  \includegraphics[width=\columnwidth]{bmc-plots/fsm.pdf}
-  \subcaption[]{Time to model check \textbf{fsm}.}\label{fig:benchmark-lin-l}
-  \includegraphics[width=\columnwidth]{bmc-plots/MulDiv.pdf}
-  \subcaption[]{Time to model check \textbf{muldiv}.}\label{fig:benchmark-err-s}
+\centering
+\begin{subfigure}{0.32\columnwidth}
+\includegraphics[width=\columnwidth]{bmc-plots/mitre.pdf}
+\subcaption[]{Time to model check \textbf{miter}.}\label{fig:benchmark-lin-s}
 \end{subfigure}
-  \caption{\toolname{}'s RTL engine scales significantly worse than other BMC engines on non-trivial designs.}\label{fig:benchmark-bmc}
+\hfill
+\begin{subfigure}{0.32\columnwidth}
+\includegraphics[width=\columnwidth]{bmc-plots/fsm.pdf}
+\subcaption[]{Time to model check \textbf{fsm}.}\label{fig:benchmark-lin-l}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.32\columnwidth}
+\includegraphics[width=\columnwidth]{bmc-plots/MulDiv.pdf}
+\subcaption[]{Time to model check \textbf{muldiv}.}\label{fig:benchmark-err-s}
+\end{subfigure}
+\caption{\toolname{}'s RTL engine scales significantly worse than other BMC engines on non-trivial designs.}\label{fig:benchmark-bmc}
 \end{figure}  
 
 \arjun{It's important to acknowledge the fact that other tools are better in certain aspects. But  personally, if we're not competitive, then I don't think it's super important to evaluate in high detail exactly how uncompetitive we are. As a reader and potential user of your research, I'm not sure it helps me to see three different graphs showing how slow you are on each. It's enough for me to read a sentence or two explaining that SOTA BMCs scale better on fsm and muldiv, while EDAMAME scales very well (seemingly better than the competing solvers) on miter. I also think that none of this requires the amount of space that has been dedicated to introducing the competing BMCs.}
@@ -1272,7 +1280,6 @@ We can see that, as expected, \toolname{}'s simple RTL engine is not very compet
 Z3 is not specifically optimized for bitvector problems, and the RTL engine naively pops and pushes the portion of the circuit relevant to the property on each cycle without taking any advantage of incremental solving.
 Z3 is the only SMT solver currently provided as a dependency of CIRCT, and this motivates dependencies on SMT solvers better optimized for the bitvector theories that hardware verification tooling tends to use.
 
-\newpage
 \subsection{Evaluating \toolname{}'s FSM Engine}
 
 We wish not just to evaluate whether \toolname{}'s FSM engine is performant, but to determine whether introducing domain-specific algorithms provides a model checking time improvement that couldn't simply be achieved by implementing a particularly performant RTL model checking algorithm.
@@ -1291,9 +1298,10 @@ We benchmark on synthetic benchmarks to assess the scalability of \toolname{}'s 
 
 \begin{figure}[]
   \centering
-  \includegraphics[width=0.3\columnwidth]{linear-struc.pdf}
+  \hfill
+  \includegraphics[width=0.2\columnwidth]{linear-struc.pdf}
   % \subcaption[Linear FSMs]{}\label{fig:benchmark-lin}
-  \includegraphics[width=0.38\columnwidth]{err-struc-vert.pdf}
+  \includegraphics[width=0.28\columnwidth]{err-struc-vert.pdf}
   % \subcaption[Error-state FSMs]{}\label{fig:benchmark-err}
   \hfill
   \caption{We introduce two synthetic benchmarks sets to assess the scalability of our approach: 
@@ -1456,8 +1464,6 @@ We use btor2chc to naively convert our benchmarks from RTL into CHCs, and then r
 We observe that \toolname{}'s models can be usually checked much faster, often by over an order of magnitude.
 Furthermore, we note that in \autoref{fig:chc-lin} and \autoref{fig:chc-err}, the model checking time seems to scale significantly faster over btor2chc's output.
 \toolname{}'s FSM engine is again slower, though, on the same 16 state PULP FSM, reinforcing the idea that \toolname{} performs best on state-local properties.
-
-\newpage
 
 \section{Related Work}
 We briefly review how the work described here relates to work in related
