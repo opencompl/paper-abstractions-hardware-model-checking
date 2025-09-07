@@ -10,27 +10,27 @@
 
 \documentclass[acmsmall,screen,review]{acmart}
 
-\def\acmversionanonymous{anonymous}
-\def\acmversionjournal{journal}
-\def\acmversionnone{none}
+% \def\acmversionanonymous{anonymous}
+% \def\acmversionjournal{journal}
+% \def\acmversionnone{none}
 
-\makeatletter
-\if@ACM@anonymous
-  \def\acmversion{anonymous}
-\else
-  \def\acmversion{journal}
-\fi
-\makeatother
+% \makeatletter
+% \if@ACM@anonymous
+%   \def\acmversion{anonymous}
+% \else
+%   \def\acmversion{journal}
+% \fi
+% \makeatother
 
-\usepackage{colortbl}
+% \usepackage{colortbl}
 
-% 'draftonly' environment
-\usepackage{environ}
-\ifx\paperversion\paperversiondraft
-\newenvironment{draftonly}{}{}
-\else
-\NewEnviron{draftonly}{}
-\fi
+% % 'draftonly' environment
+% \usepackage{environ}
+% \ifx\paperversion\paperversiondraft
+% \newenvironment{draftonly}{}{}
+% \else
+% \NewEnviron{draftonly}{}
+% \fi
 
 % Most PL conferences are edited by conference-publishing.com. Follow their
 % advice to add the following packages.
@@ -39,25 +39,28 @@
 % standard nowadays. The second ensures the use of font encodings that support
 % accented characters etc. (Why should I use this?). The mictotype package
 % enables certain features 'to­wards ty­po­graph­i­cal per­fec­tion
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-\usepackage{microtype}
+% \usepackage[utf8]{inputenc}
+% \usepackage[T1]{fontenc}
+% \usepackage{microtype}
 
-\usepackage{xargs}
-\usepackage{lipsum}
-\usepackage{xparse}
-\usepackage{xifthen, xstring}
-\usepackage{xspace}
+% \usepackage{xargs}
+% \usepackage{lipsum}
+% \usepackage{xparse}
+% \usepackage{xifthen, xstring}
+% \usepackage{xspace}
 \usepackage{marginnote}
-\usepackage{etoolbox}
-\usepackage[acronym,shortcuts]{glossaries}
-\usepackage{amsmath}
-\usepackage{thmtools} % required for autoref to lemmas
+% \usepackage{etoolbox}
+\usepackage{acronym}
+\usepackage{cleveref}
+\usepackage{subcaption}
+% \usepackage{amsmath}
+% \usepackage{thmtools} % required for autoref to lemmas
 \usepackage{algorithm}
+\usepackage{algorithmicx}
 
-\usepackage{siunitx}
-\usepackage[svgnames]{xcolor}
-\usepackage{minted}
+% \usepackage{siunitx}
+% \usepackage[svgnames]{xcolor}
+% \usepackage{minted}
 
 \input{tex/setup.tex}
 \input{tex/acm.tex}
@@ -107,18 +110,36 @@
 \definecolor{pairedSixDarkRed}{HTML}{e31a1c}
 
 \createtodoauthor{grosser}{pairedOneLightBlue}
-\createtodoauthor{authorTwo}{pairedTwoDarkBlue}
-\createtodoauthor{authorThree}{pairedThreeLightGreen}
+\createtodoauthor{healy}{pairedTwoDarkBlue}
+\createtodoauthor{luisa}{pairedThreeLightGreen}
 \createtodoauthor{authorFour}{pairedFourDarkGreen}
-\createtodoauthor{authorFive}{pairedFiveLightRed}
-\createtodoauthor{authorSix}{pairedSixDarkRed}
+\createtodoauthor{arjun}{pairedFiveLightRed}
+\createtodoauthor{christos}{pairedSixDarkRed}
+\createtodoauthor{kuhn}{pairedNegTwoDarkGray}
 
-\newacronym{ir}{IR}{Intermediate Representation}
+\acrodef{cfg}[CFG]{Control-Flow Graph}
+\acrodef{ssa}[SSA]{Static Single Assignment}
+\acrodef{ila}[ILA]{Instruction-Level Abstraction}
+\acrodef{isa}[ISA]{Instruction Set Architecture}
+\acrodef{chc}[CHC]{Constrained Horn Clause}
+\acrodef{eda}[EDA]{Electronic Design Automation}
+\acrodef{ir}[IR]{Intermediate Representation}
+\acrodef{fol}[FOL]{First Order Logic}
+\acrodef{fsm}[FSM]{Finite State Machine}
+\acrodef{smt}[SMT]{Satisfiability Modulo Theory}
+\acrodef{cgra}[CGRA]{Course-Grained Reconfigurable Array}
+\acrodef{rtl}[RTL]{Register-Transfer Level}
+\acrodef{jit}[JIT]{Just-In-Time}
+\acrodef{hls}[HLS]{High-Level Synthesis}
+\acrodef{ltl}[LTL]{Linear Temporal Logic}
+\acrodef{bmc}[BMC]{Bounded Model Checking}
+\acrodef{dsl}[DSL]{Domain-Specific Language}
+\acrodef{hdl}[HDL]{Hardware Description Language}
 
 \graphicspath{{./images/}}
 
 % Define macros that are used in this paper
-%
+
 % We require all macros to end with a delimiter (by default {}) to enusure
 % that LaTeX adds whitespace correctly.
 \makeatletter
@@ -142,29 +163,29 @@
 \newdelimitedcommand{toolname}{Tool}
 
 \usepackage{booktabs}
-\newcommand{\ra}[1]{\renewcommand{\arraystretch}{#1}}
+% \newcommand{\ra}[1]{\renewcommand{\arraystretch}{#1}}
 
-\usepackage[verbose]{newunicodechar}
-\newunicodechar{₁}{\ensuremath{_1}}
-\newunicodechar{₂}{\ensuremath{_2}}
-\newunicodechar{∀}{\ensuremath{\forall}}
-\newunicodechar{α}{\ensuremath{\alpha}}
-\newunicodechar{β}{\ensuremath{\beta}}
+% \usepackage[verbose]{newunicodechar}
+% \newunicodechar{₁}{\ensuremath{_1}}
+% \newunicodechar{₂}{\ensuremath{_2}}
+% \newunicodechar{∀}{\ensuremath{\forall}}
+% \newunicodechar{α}{\ensuremath{\alpha}}
+% \newunicodechar{β}{\ensuremath{\beta}}
 
-% \circled command to print a colored circle.
-% \circled{1} pretty-prints "(1)"
-% This is useful to refer to labels that are embedded within figures.
-\DeclareRobustCommand{\circled}[2][]{%
-    \ifthenelse{\isempty{#1}}%
-        {\circledbase{pairedOneLightBlue}{#2}}%
-        {\autoref{#1}: \hyperref[#1]{\circledbase{pairedOneLightBlue}{#2}}}%
-}
+% % \circled command to print a colored circle.
+% % \circled{1} pretty-prints "(1)"
+% % This is useful to refer to labels that are embedded within figures.
+% \DeclareRobustCommand{\circled}[2][]{%
+%     \ifthenelse{\isempty{#1}}%
+%         {\circledbase{pairedOneLightBlue}{#2}}%
+%         {\autoref{#1}: \hyperref[#1]{\circledbase{pairedOneLightBlue}{#2}}}%
+% }
 
-% listings don't write "Listing" in autoref without this.
-\providecommand*{\listingautorefname}{Listing}
-\renewcommand{\sectionautorefname}{Section}
-\renewcommand{\subsectionautorefname}{Section}
-\renewcommand{\subsubsectionautorefname}{Section}
+% % listings don't write "Listing" in autoref without this.
+% \providecommand*{\listingautorefname}{Listing}
+% \renewcommand{\sectionautorefname}{Section}
+% \renewcommand{\subsectionautorefname}{Section}
+% \renewcommand{\subsubsectionautorefname}{Section}
 
 \begin{document}
 
@@ -181,108 +202,108 @@
 %% appropriate command.
 %% Many elements are not rendered, but should be provided for metadata
 %% extraction tools.
-\author{First1 Last1}
-\authornote{with author1 note}          %% \authornote is optional;
-%% can be repeated if necessary
-\orcid{nnnn-nnnn-nnnn-nnnn}             %% \orcid is optional
-\affiliation{
-  \position{Position1}
-  \department{Department1}              %% \department is recommended
-  \institution{Institution1}            %% \institution is required
-  \streetaddress{Street1 Address1}
-  \city{City1}
-  \state{State1}
-  \postcode{Post-Code1}
-  \country{Country1}
-}
-\email{first1.last1@inst1.edu}          %% \email is recommended
+% \author{First1 Last1}
+% \authornote{with author1 note}          %% \authornote is optional;
+% %% can be repeated if necessary
+% \orcid{nnnn-nnnn-nnnn-nnnn}             %% \orcid is optional
+% \affiliation{
+%   \position{Position1}
+%   \department{Department1}              %% \department is recommended
+%   \institution{Institution1}            %% \institution is required
+%   \streetaddress{Street1 Address1}
+%   \city{City1}
+%   \state{State1}
+%   \postcode{Post-Code1}
+%   \country{Country1}
+% }
+% \email{first1.last1@inst1.edu}          %% \email is recommended
 
-\author{First2 Last2}
-\authornote{with author2 note}          %% \authornote is optional;
-%% can be repeated if necessary
-\orcid{nnnn-nnnn-nnnn-nnnn}             %% \orcid is optional
-\affiliation{
-  \position{Position2a}
-  \department{Department2a}             %% \department is recommended
-  \institution{Institution2a}           %% \institution is required
-  \streetaddress{Street2a Address2a}
-  \city{City2a}
-  \state{State2a}
-  \postcode{Post-Code2a}
-  \country{Country2a}
-}
-\email{first2.last2@inst2a.com}         %% \email is recommended
-\affiliation{
-  \position{Position2b}
-  \department{Department2b}             %% \department is recommended
-  \institution{Institution2b}           %% \institution is required
-  \streetaddress{Street3b Address2b}
-  \city{City2b}
-  \state{State2b}
-  \postcode{Post-Code2b}
-  \country{Country2b}
-}
-\email{first2.last2@inst2b.org}         %% \email is recommended
+% \author{First2 Last2}
+% \authornote{with author2 note}          %% \authornote is optional;
+% %% can be repeated if necessary
+% \orcid{nnnn-nnnn-nnnn-nnnn}             %% \orcid is optional
+% \affiliation{
+%   \position{Position2a}
+%   \department{Department2a}             %% \department is recommended
+%   \institution{Institution2a}           %% \institution is required
+%   \streetaddress{Street2a Address2a}
+%   \city{City2a}
+%   \state{State2a}
+%   \postcode{Post-Code2a}
+%   \country{Country2a}
+% }
+% \email{first2.last2@inst2a.com}         %% \email is recommended
+% \affiliation{
+%   \position{Position2b}
+%   \department{Department2b}             %% \department is recommended
+%   \institution{Institution2b}           %% \institution is required
+%   \streetaddress{Street3b Address2b}
+%   \city{City2b}
+%   \state{State2b}
+%   \postcode{Post-Code2b}
+%   \country{Country2b}
+% }
+% \email{first2.last2@inst2b.org}         %% \email is recommended
 
-\begin{abstract}
+% \begin{abstract}
 
-  % An abstract should consist of six main sentences:
-  %  1. Introduction. In one sentence, what’s the topic?
-  Modern \ac{eda} tools empower designers to create complex hardware with greater productivity than ever before. \arjun{The first sentence feels a little strange to me, like are they really "creating" hardware, or something}
-  As hardware complexity continues to increase, though, verifying the hardware we design is becoming progressively more challenging, and we are beginning to see the limits of testbench-based verification.
-    %  2. State the problem you tackle.
-  Formally verifying hardware provides strong guarantees of correctness, but
-  comes at significant computational cost that scales poorly with design size.
-  %  3. Summarize (in one sentence) why nobody else has adequately answered the research question yet.
-  Inductive model checking algorithms have made great strides in reducing this
-  bottleneck, but are ultimately limited in how much information they can
-  extract from the \ac{rtl} designs they traditionally receive.
-  %  4. Explain, in one sentence, how you tackled the research question.
-  Hence, we argue that focusing on general-purpose model-checking algorithms is no longer the best fit for today's hardware design processes.
-  Hardware compilers increasingly provide high-level abstractions to improve designer productivity, but the structural information encoded in these abstractions is usually discarded in the verification process.
-  Instead, we propose building verification models from the high-level representations of the designs, allowing tools to make informed choices about the algorithms they use.
-  %  5. In one sentence, how did you go about doing the research that follows from your big idea.
-  By providing verification tooling with both a general-purpose RTL model checking algorithm and domain-specific algorithms, model checkers can verify faster without loss of generality.
-  %  6. As a single sentence, what’s the key impact of your research?
-  In this paper, we explore how a dedicated verification algorithm can be used to create a model checker that can verify any RTL design, but can also exploit explicit high-level finite state machine descriptions to provide faster verification times.
-  We demonstrate this approach with \toolname{}, a model checker built on the CIRCT framework, and show that it achieves a 35.8\% reduction (geomean) in model-checking time on real-world finite state machines over state-of-the-art RTL model checkers.
+%   % An abstract should consist of six main sentences:
+%   %  1. Introduction. In one sentence, what’s the topic?
+%   Modern \ac{eda} tools empower designers to create complex hardware with greater productivity than ever before. \arjun{The first sentence feels a little strange to me, like are they really "creating" hardware, or something}
+%   As hardware complexity continues to increase, though, verifying the hardware we design is becoming progressively more challenging, and we are beginning to see the limits of testbench-based verification.
+%     %  2. State the problem you tackle.
+%   Formally verifying hardware provides strong guarantees of correctness, but
+%   comes at significant computational cost that scales poorly with design size.
+%   %  3. Summarize (in one sentence) why nobody else has adequately answered the research question yet.
+%   Inductive model checking algorithms have made great strides in reducing this
+%   bottleneck, but are ultimately limited in how much information they can
+%   extract from the \ac{rtl} designs they traditionally receive.
+%   %  4. Explain, in one sentence, how you tackled the research question.
+%   Hence, we argue that focusing on general-purpose model-checking algorithms is no longer the best fit for today's hardware design processes.
+%   Hardware compilers increasingly provide high-level abstractions to improve designer productivity, but the structural information encoded in these abstractions is usually discarded in the verification process.
+%   Instead, we propose building verification models from the high-level representations of the designs, allowing tools to make informed choices about the algorithms they use.
+%   %  5. In one sentence, how did you go about doing the research that follows from your big idea.
+%   By providing verification tooling with both a general-purpose RTL model checking algorithm and domain-specific algorithms, model checkers can verify faster without loss of generality.
+%   %  6. As a single sentence, what’s the key impact of your research?
+%   In this paper, we explore how a dedicated verification algorithm can be used to create a model checker that can verify any RTL design, but can also exploit explicit high-level finite state machine descriptions to provide faster verification times.
+%   We demonstrate this approach with \toolname{}, a model checker built on the CIRCT framework, and show that it achieves a 35.8\% reduction (geomean) in model-checking time on real-world finite state machines over state-of-the-art RTL model checkers.
 
-  % (http://www.easterbrook.ca/steve/2010/01/how-to-write-a-scientific-abstract-in-six-easy-steps/)
-\end{abstract}
+%   % (http://www.easterbrook.ca/steve/2010/01/how-to-write-a-scientific-abstract-in-six-easy-steps/)
+% \end{abstract}
 
 % Only add ACM notes and keywords in camera ready version
 % Drop citations and footnotes in draft and blind mode.
-\ifx\acmversion\acmversionanonymous
-  \settopmatter{printacmref=false} % Removes citation information below abstract
-  \renewcommand\footnotetextcopyrightpermission[1]{} % removes footnote with conference information in first column
-\fi
+% \ifx\acmversion\acmversionanonymous
+%   \settopmatter{printacmref=false} % Removes citation information below abstract
+%   \renewcommand\footnotetextcopyrightpermission[1]{} % removes footnote with conference information in first column
+% \fi
 
-\ifx\acmversion\acmversionjournal
-  %% 2012 ACM Computing Classification System (CSS) concepts
-  %% Generate at 'http://dl.acm.org/ccs/ccs.cfm'.
-  \begin{CCSXML}
-    <ccs2012>
-    <concept>
-    <concept_id>10011007.10011006.10011008</concept_id>
-    <concept_desc>Software and its engineering~General programming languages</concept_desc>
-    <concept_significance>500</concept_significance>
-    </concept>
-    <concept>
-    <concept_id>10003456.10003457.10003521.10003525</concept_id>
-    <concept_desc>Social and professional topics~History of programming languages</concept_desc>
-    <concept_significance>300</concept_significance>
-    </concept>
-    </ccs2012>
-  \end{CCSXML}
+% \ifx\acmversion\acmversionjournal
+%   %% 2012 ACM Computing Classification System (CSS) concepts
+%   %% Generate at 'http://dl.acm.org/ccs/ccs.cfm'.
+%   \begin{CCSXML}
+%     <ccs2012>
+%     <concept>
+%     <concept_id>10011007.10011006.10011008</concept_id>
+%     <concept_desc>Software and its engineering~General programming languages</concept_desc>
+%     <concept_significance>500</concept_significance>
+%     </concept>
+%     <concept>
+%     <concept_id>10003456.10003457.10003521.10003525</concept_id>
+%     <concept_desc>Social and professional topics~History of programming languages</concept_desc>
+%     <concept_significance>300</concept_significance>
+%     </concept>
+%     </ccs2012>
+%   \end{CCSXML}
 
-  \ccsdesc[500]{Software and its engineering~General programming languages}
-  \ccsdesc[300]{Social and professional topics~History of programming languages}
-  %% End of generated code
+%   \ccsdesc[500]{Software and its engineering~General programming languages}
+%   \ccsdesc[300]{Social and professional topics~History of programming languages}
+%   %% End of generated code
 
-  %% Keywords
-  %% comma separated list
-  \keywords{keyword1, keyword2, keyword3}
-\fi
+%   %% Keywords
+%   %% comma separated list
+%   \keywords{keyword1, keyword2, keyword3}
+% \fi
 
 %% \maketitle
 %% Note: \maketitle command must come after title commands, author
@@ -372,65 +393,65 @@ Some operations also have \textit{regions} associated with them, each of which i
 The \texttt{hw.module} operation is an example of this --- it describes a hardware module, and has a region describing the module's contents.
 We build upon CIRCT as it uses these concepts to provide various high-level abstractions for digital hardware, making it an ideal platform to demonstrate our approach
 
-\definecolor{col1}{HTML}{e31a1c}
-\def\speciallstcolor{\begingroup\color{col1}}
-\def\endspeciallstcolor{\endgroup}
-
-\definecolor{col2}{HTML}{1f78b4}
-\def\speciallstcolorbis{\begingroup\color{col2}}
-\def\endspeciallstcolorbis{\endgroup}
-
-\definecolor{col3}{HTML}{33a02c}
-\def\speciallstcolorter{\begingroup\color{col3}}
-\def\endspeciallstcolorter{\endgroup}
-
-\definecolor{col4}{HTML}{cacaca}
-\def\speciallstcolorqua{\begingroup\color{col4}}
-\def\endspeciallstcolorqua{\endgroup}
-% \def\speciallstcolor2{\begingroup\color{\definecolor{col2}{1f78b4}}}
+% \definecolor{col1}{HTML}{e31a1c}
+% \def\speciallstcolor{\begingroup\color{col1}}
 % \def\endspeciallstcolor{\endgroup}
-\lstset{escapeinside={<@}{@>}}
-\begin{figure}[h]
+
+% \definecolor{col2}{HTML}{1f78b4}
+% \def\speciallstcolorbis{\begingroup\color{col2}}
+% \def\endspeciallstcolorbis{\endgroup}
+
+% \definecolor{col3}{HTML}{33a02c}
+% \def\speciallstcolorter{\begingroup\color{col3}}
+% \def\endspeciallstcolorter{\endgroup}
+
+% \definecolor{col4}{HTML}{cacaca}
+% \def\speciallstcolorqua{\begingroup\color{col4}}
+% \def\endspeciallstcolorqua{\endgroup}
+% % \def\speciallstcolor2{\begingroup\color{\definecolor{col2}{1f78b4}}}
+% % \def\endspeciallstcolor{\endgroup}
+% \lstset{escapeinside={<@}{@>}}
+% \begin{figure}[h]
   
-  \begin{subfigure}[T]{0.6\columnwidth}
-\begin{lstlisting}[escapeinside={(*@}{@*)}, basicstyle=\tiny\ttfamily]
-(*@\aftergroup\speciallstcolorqua@*)fsm.machine @fsm10() -> (i4) attributes {initialState = "A"} {
-  %cnt = fsm.variable "cnt" {initValue = 0 : i4} : i4
-  %c0 = hw.constant 0 : i4
-  %c1 = hw.constant 1 : i4
-  %c5 = hw.constant 5 : i4
-  fsm.state @A(*@\aftergroup\endspeciallstcolorqua@*) output {
-    fsm.output %cnt : i4
-  } (*@\aftergroup\speciallstcolorqua@*)transitions { 
-    fsm.transition @B
-  }
-  fsm.state @B(*@\aftergroup\endspeciallstcolorqua@*) output {
-    fsm.output %cnt : i4
-  } (*@\aftergroup\speciallstcolorqua@*)transitions {(*@\aftergroup\endspeciallstcolorqua@*)
-    (*@\aftergroup\speciallstcolor@*)fsm.transition @A guard {
-      %isFive = comb.icmp eq %cnt, %c5 : i1
-      fsm.return %isFive
-    } action {
-      fsm.update %cnt, %c0 : i4
-    }(*@\aftergroup\endspeciallstcolor@*)
-    (*@\aftergroup\speciallstcolorbis@*)fsm.transition @B guard {
-      %isntFive = comb.icmp ne %cnt, %c5 : i1
-      fsm.return %isntFive
-    } action {
-      %newCnt = comb.add %cnt, %c1 : i4
-      fsm.update %cnt, %newCnt : i4
-    }(*@\aftergroup\endspeciallstcolorbis@*)
-  (*@\aftergroup\speciallstcolorqua@*)}
-}(*@\aftergroup\endspeciallstcolorqua@*)
-\end{lstlisting}
-\end{subfigure}
-  \begin{subfigure}[T]{0.39\columnwidth}
-    \includegraphics[width=\columnwidth]{fsm-dialect.pdf}
-\end{subfigure}
-  \caption{The operations within CIRCT's \texttt{fsm} dialect describe the structure of a \ac{fsm}. 
-  We highlight the operations that explicitly capture its behavior.}
-  \label{fig:fsm-struc}
-\end{figure}
+%   \begin{subfigure}[T]{0.6\columnwidth}
+% \begin{lstlisting}[escapeinside={(*@}{@*)}, basicstyle=\tiny\ttfamily]
+% (*@\aftergroup\speciallstcolorqua@*)fsm.machine @fsm10() -> (i4) attributes {initialState = "A"} {
+%   %cnt = fsm.variable "cnt" {initValue = 0 : i4} : i4
+%   %c0 = hw.constant 0 : i4
+%   %c1 = hw.constant 1 : i4
+%   %c5 = hw.constant 5 : i4
+%   fsm.state @A(*@\aftergroup\endspeciallstcolorqua@*) output {
+%     fsm.output %cnt : i4
+%   } (*@\aftergroup\speciallstcolorqua@*)transitions { 
+%     fsm.transition @B
+%   }
+%   fsm.state @B(*@\aftergroup\endspeciallstcolorqua@*) output {
+%     fsm.output %cnt : i4
+%   } (*@\aftergroup\speciallstcolorqua@*)transitions {(*@\aftergroup\endspeciallstcolorqua@*)
+%     (*@\aftergroup\speciallstcolor@*)fsm.transition @A guard {
+%       %isFive = comb.icmp eq %cnt, %c5 : i1
+%       fsm.return %isFive
+%     } action {
+%       fsm.update %cnt, %c0 : i4
+%     }(*@\aftergroup\endspeciallstcolor@*)
+%     (*@\aftergroup\speciallstcolorbis@*)fsm.transition @B guard {
+%       %isntFive = comb.icmp ne %cnt, %c5 : i1
+%       fsm.return %isntFive
+%     } action {
+%       %newCnt = comb.add %cnt, %c1 : i4
+%       fsm.update %cnt, %newCnt : i4
+%     }(*@\aftergroup\endspeciallstcolorbis@*)
+%   (*@\aftergroup\speciallstcolorqua@*)}
+% }(*@\aftergroup\endspeciallstcolorqua@*)
+% \end{lstlisting}
+% \end{subfigure}
+%   \begin{subfigure}[T]{0.39\columnwidth}
+%     \includegraphics[width=\columnwidth]{fsm-dialect.pdf}
+% \end{subfigure}
+%   \caption{The operations within CIRCT's \texttt{fsm} dialect describe the structure of a \ac{fsm}. 
+%   We highlight the operations that explicitly capture its behavior.}
+%   \label{fig:fsm-struc}
+% \end{figure}
 
   
 \subsubsection{FSM Representations}
@@ -827,8 +848,8 @@ The algorithm works as follows
   \item Inline the body of the module, and use canonicalization rules to propagate constants
 \end{enumerate}
 
-Backwards constant propagation is added by adding the new rewrite rule
-\[if(c,a,b) = n  \xRightarrow[]{isconst(if(c,a,b))}if(c, a = n, b = n)\]
+% Backwards constant propagation is added by adding the new rewrite rule
+% \[if(c,a,b) = n  \xRightarrow[]{isconst(if(c,a,b))}if(c, a = n, b = n)\]
 
 This rewrite rule is only a simplification under the condition $isconst(if(c,a,b))$, which is defined by
 
@@ -849,33 +870,33 @@ se(\_ : i_{n}) &= \left\{0, 1, 2, 3, \ldots, 2^{n}-2, 2^{n}-1\right\}
 The extraction algorithm is described in \Cref{fig:fsm_extraction_workflow}.
 The algorithm is explained in pseudo-code in \Cref{alg:fsm_extraction}
 
-\begin{algorithm}[H]
-\caption{Simplified FSM Extraction from a Hardware Module}
-\label{alg:fsm_extraction}
-\begin{algorithmic}[1]
-\Function{ExtractFSM}{$M : hw.module$}
-  \State initialRegVal : $i_s$ := getInitialRegVal(M)
-  \State nextState : $i_i \to i_s \to i_s$ := getNextStateLogic(M)
-  \State output : $i_s \to i_o$ := getOutputLogic(M)
-  \State workList : List(Int) := [initalRegVal]
-  \State visitedStates : Set(Int) := \{\}
-  \State fsm : FSM := new FSM()
-  \While{workList $\neq$ []}
-  \State cs : $i_s$ := workList.pop()
-  \State $visitedState \gets visitedStates \cup \{cs\}$
-   \State S : State := fsm.addState(cs, output(cs))
-   \State pns : Set($i_s$) := se(nextState(\_, cs))
-   \For{$ns : i_S \in pns$}
-     \State S.addTransition(ns, $i \mapsto nextState(i, cs) = ns$)
-     \If{$ns \notin visitedStates$}
-       \State workList.pushBack(ns)
-     \EndIf
-   \EndFor
-\EndWhile
-  \State \Return fsm
-\EndFunction
-\end{algorithmic}
-\end{algorithm}
+% \begin{algorithm}[H]
+% \caption{Simplified FSM Extraction from a Hardware Module}
+% \label{alg:fsm_extraction}
+% \begin{algorithmic}[1]
+% \Function{ExtractFSM}{$M : hw.module$}
+%   \State initialRegVal : $i_s$ := getInitialRegVal(M)
+%   \State nextState : $i_i \to i_s \to i_s$ := getNextStateLogic(M)
+%   \State output : $i_s \to i_o$ := getOutputLogic(M)
+%   \State workList : List(Int) := [initalRegVal]
+%   \State visitedStates : Set(Int) := \{\}
+%   \State fsm : FSM := new FSM()
+%   \While{workList $\neq$ []}
+%   \State cs : $i_s$ := workList.pop()
+%   \State $visitedState \gets visitedStates \cup \{cs\}$
+%    \State S : State := fsm.addState(cs, output(cs))
+%    \State pns : Set($i_s$) := se(nextState(\_, cs))
+%    \For{$ns : i_S \in pns$}
+%      \State S.addTransition(ns, $i \mapsto nextState(i, cs) = ns$)
+%      \If{$ns \notin visitedStates$}
+%        \State workList.pushBack(ns)
+%      \EndIf
+%    \EndFor
+% \EndWhile
+%   \State \Return fsm
+% \EndFunction
+% \end{algorithmic}
+% \end{algorithm}
 
 
 \subsection{Performance of FSM Extraction}
@@ -920,33 +941,33 @@ The verification process is described in \Cref{fig:fsm_extraction_workflow}.
 \end{figure}
 
 
-\begin{table*}[t]
-\centering
-\caption{FSM Conversion and Verification Summary on OpenTitan FSMs}
-\label{tab:fsm_conversion}
-\begin{tabular}{l S[table-format=4.0] S[table-format=3.0] S[table-format=1.4] l l}
-\toprule
-\textbf{FSM Name} & {\textbf{SV LoC}} & {\textbf{MLIR LoC}} & {\textbf{Time (s)}} & \textbf{Status} & \textbf{Details} \\
-\midrule
-adc\_ctrl\_fsm                   &  391 & 320 &  1.1521 & BMC Correct & OK \\
-aes\_cipher\_control\_fsm         &  515 & 319 &  0.2647 & BMC Correct & OK \\
-aes\_ctr\_fsm                    &  125 &  47 &  0.0234 & BMC Correct & OK \\
-darjeeling\_pwrmgr\_fsm          &  566 & 353 &  0.8507 & BMC Correct & OK \\
-darjeeling\_pwrmgr\_slow\_fsm     &  337 & 189 &  0.2297 & BMC Correct & OK \\
-earlgrey\_pwrmgr\_fsm            &  560 & 355 &  0.8822 & BMC Correct & OK \\
-earlgrey\_pwrmgr\_slow\_fsm       &  364 & 200 &  0.2427 & BMC Correct & OK \\
-englishbreakfast\_pwrmgr\_fsm    &  721 & 347 &  0.8046 & BMC Correct & OK \\
-englishbreakfast\_pwrmgr\_slow\_fsm &  364 & 200 &  0.2424 & BMC Correct & OK \\
-i2c\_controller\_fsm             &  993 & 644 &  8.9873 & BMC Correct & OK \\
-i2c\_target\_fsm                 & 1042 & 651 &  5.3982 & BMC Correct & OK \\
-\textcolor{red}{lc\_ctrl\_fsm}   &  \textcolor{red}{890} & \textcolor{red}{342} &  \textcolor{red}{1.3648} & \textcolor{red}{CRASH}  & \textcolor{red}{circt-opt: fsm-to-core} \\
-mbx\_fsm                        &  177 & 138 &  0.0538 & BMC Correct & OK \\
-rom\_ctrl\_fsm                   &  358 & 227 &  2.1657 & BMC Correct & OK \\
-spi\_host\_fsm.sv                &  645 & 393 &  1.9216 & BMC Correct & OK \\
-\bottomrule
-\end{tabular}
-\end{table*}
-%% \end{figure}
+% \begin{table*}[t]
+% \centering
+% \caption{FSM Conversion and Verification Summary on OpenTitan FSMs}
+% \label{tab:fsm_conversion}
+% \begin{tabular}{l S[table-format=4.0] S[table-format=3.0] S[table-format=1.4] l l}
+% \toprule
+% \textbf{FSM Name} & {\textbf{SV LoC}} & {\textbf{MLIR LoC}} & {\textbf{Time (s)}} & \textbf{Status} & \textbf{Details} \\
+% \midrule
+% adc\_ctrl\_fsm                   &  391 & 320 &  1.1521 & BMC Correct & OK \\
+% aes\_cipher\_control\_fsm         &  515 & 319 &  0.2647 & BMC Correct & OK \\
+% aes\_ctr\_fsm                    &  125 &  47 &  0.0234 & BMC Correct & OK \\
+% darjeeling\_pwrmgr\_fsm          &  566 & 353 &  0.8507 & BMC Correct & OK \\
+% darjeeling\_pwrmgr\_slow\_fsm     &  337 & 189 &  0.2297 & BMC Correct & OK \\
+% earlgrey\_pwrmgr\_fsm            &  560 & 355 &  0.8822 & BMC Correct & OK \\
+% earlgrey\_pwrmgr\_slow\_fsm       &  364 & 200 &  0.2427 & BMC Correct & OK \\
+% englishbreakfast\_pwrmgr\_fsm    &  721 & 347 &  0.8046 & BMC Correct & OK \\
+% englishbreakfast\_pwrmgr\_slow\_fsm &  364 & 200 &  0.2424 & BMC Correct & OK \\
+% i2c\_controller\_fsm             &  993 & 644 &  8.9873 & BMC Correct & OK \\
+% i2c\_target\_fsm                 & 1042 & 651 &  5.3982 & BMC Correct & OK \\
+% \textcolor{red}{lc\_ctrl\_fsm}   &  \textcolor{red}{890} & \textcolor{red}{342} &  \textcolor{red}{1.3648} & \textcolor{red}{CRASH}  & \textcolor{red}{circt-opt: fsm-to-core} \\
+% mbx\_fsm                        &  177 & 138 &  0.0538 & BMC Correct & OK \\
+% rom\_ctrl\_fsm                   &  358 & 227 &  2.1657 & BMC Correct & OK \\
+% spi\_host\_fsm.sv                &  645 & 393 &  1.9216 & BMC Correct & OK \\
+% \bottomrule
+% \end{tabular}
+% \end{table*}
+% %% \end{figure}
 
 % \begin{figure*}[t]
 %     \centering
@@ -1309,28 +1330,28 @@ We generate two types of synthetic benchmarks, as detailed in \Cref{fig:benchmar
 \paragraph{Real-World FSMs:}
 \label{rw-para}
 
-\begin{table}[]
-  \centering
-  \small
-  \caption{We evaluate our tool on a suite of FSMs from real-world EDA flows which vary in size and complexity.}
-  \label{tab:real-world-fsms}
-  \begin{tabularx}{\columnwidth}{@{\extracolsep{\fill}}l @{} S[table-format=3.0] @{} S[table-format=2.0] @{} S[table-format=2.0] @{} S[table-format=2.0] @{} S[table-format=2.0]}
-      \toprule
-      {\bfseries FSM}           & {\thead[t]{Transitions\\(\#)}} & {\thead[t]{States\\(\#)}} & {\thead[t]{Inputs\\(\#)}} & {\thead[t]{Variables\\(\#)}} & {\thead[t]{Outputs\\(\#)}} \\
-    \midrule
-    hls1          & 141   & 72  & 3   & 23  & 15  \\
-    hls2          & 33    & 24  & 2   & 19  & 12  \\
-    hls3          & 57    & 36  & 2   & 19  & 12  \\
-    hls4          & 18    & 18  & 1   & 15  & 9   \\
-    hls5          & 20    & 20  & 1   & 16  & 9   \\
-    hls6          & 142   & 70  & 2   & 17  & 12  \\
-    opentitan1    & 5     & 3   & 4   & 3   & 3   \\
-    opentitan2    & 14    & 7   & 7   & 0   & 3   \\
-    pulp1         & 32    & 16  & 1   & 0   & 7   \\
-    \bottomrule
-    \end{tabularx}
-\arjun{maybe caption more like: We evaluate our tool on a benchmark suite of FSMs encompassing a wide variety of sizes and complexities.}
-\end{table}  
+% \begin{table}[]
+%   \centering
+%   \small
+%   \caption{We evaluate our tool on a suite of FSMs from real-world EDA flows which vary in size and complexity.}
+%   \label{tab:real-world-fsms}
+%   \begin{tabularx}{\columnwidth}{@{\extracolsep{\fill}}l @{} S[table-format=3.0] @{} S[table-format=2.0] @{} S[table-format=2.0] @{} S[table-format=2.0] @{} S[table-format=2.0]}
+%       \toprule
+%       {\bfseries FSM}           & {\thead[t]{Transitions\\(\#)}} & {\thead[t]{States\\(\#)}} & {\thead[t]{Inputs\\(\#)}} & {\thead[t]{Variables\\(\#)}} & {\thead[t]{Outputs\\(\#)}} \\
+%     \midrule
+%     hls1          & 141   & 72  & 3   & 23  & 15  \\
+%     hls2          & 33    & 24  & 2   & 19  & 12  \\
+%     hls3          & 57    & 36  & 2   & 19  & 12  \\
+%     hls4          & 18    & 18  & 1   & 15  & 9   \\
+%     hls5          & 20    & 20  & 1   & 16  & 9   \\
+%     hls6          & 142   & 70  & 2   & 17  & 12  \\
+%     opentitan1    & 5     & 3   & 4   & 3   & 3   \\
+%     opentitan2    & 14    & 7   & 7   & 0   & 3   \\
+%     pulp1         & 32    & 16  & 1   & 0   & 7   \\
+%     \bottomrule
+%     \end{tabularx}
+% \arjun{maybe caption more like: We evaluate our tool on a benchmark suite of FSMs encompassing a wide variety of sizes and complexities.}
+% \end{table}  
 
 While generated \acp{fsm} are useful for evaluating how our approaches scale, we also
 wish to ensure that our techniques work well on hardware structures and
@@ -1624,6 +1645,18 @@ Going forward, we hope to see more formal verification algorithms that can take 
 %     mechanisms can be formalised in logic; in each section, an example is given to
 %     illustrate the use of the abstraction mechanism being discussed.  
 %     }
+
+
+
+
+
+
+
+
+
+
+
+
 
 %   \section{Potential Storylines}
 % \begin{itemize}
