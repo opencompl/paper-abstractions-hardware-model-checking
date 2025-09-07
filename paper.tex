@@ -245,31 +245,31 @@
 % }
 % \email{first2.last2@inst2b.org}         %% \email is recommended
 
-% \begin{abstract}
+\begin{abstract}
 
-%   % An abstract should consist of six main sentences:
-%   %  1. Introduction. In one sentence, what’s the topic?
-%   Modern \ac{eda} tools empower designers to create complex hardware with greater productivity than ever before. \arjun{The first sentence feels a little strange to me, like are they really "creating" hardware, or something}
-%   As hardware complexity continues to increase, though, verifying the hardware we design is becoming progressively more challenging, and we are beginning to see the limits of testbench-based verification.
-%     %  2. State the problem you tackle.
-%   Formally verifying hardware provides strong guarantees of correctness, but
-%   comes at significant computational cost that scales poorly with design size.
-%   %  3. Summarize (in one sentence) why nobody else has adequately answered the research question yet.
-%   Inductive model checking algorithms have made great strides in reducing this
-%   bottleneck, but are ultimately limited in how much information they can
-%   extract from the \ac{rtl} designs they traditionally receive.
-%   %  4. Explain, in one sentence, how you tackled the research question.
-%   Hence, we argue that focusing on general-purpose model-checking algorithms is no longer the best fit for today's hardware design processes.
-%   Hardware compilers increasingly provide high-level abstractions to improve designer productivity, but the structural information encoded in these abstractions is usually discarded in the verification process.
-%   Instead, we propose building verification models from the high-level representations of the designs, allowing tools to make informed choices about the algorithms they use.
-%   %  5. In one sentence, how did you go about doing the research that follows from your big idea.
-%   By providing verification tooling with both a general-purpose RTL model checking algorithm and domain-specific algorithms, model checkers can verify faster without loss of generality.
-%   %  6. As a single sentence, what’s the key impact of your research?
-%   In this paper, we explore how a dedicated verification algorithm can be used to create a model checker that can verify any RTL design, but can also exploit explicit high-level finite state machine descriptions to provide faster verification times.
-%   We demonstrate this approach with \toolname{}, a model checker built on the CIRCT framework, and show that it achieves a 35.8\% reduction (geomean) in model-checking time on real-world finite state machines over state-of-the-art RTL model checkers.
+  % An abstract should consist of six main sentences:
+  %  1. Introduction. In one sentence, what’s the topic?
+  Modern \ac{eda} tools empower designers to create complex hardware with greater productivity than ever before. \arjun{The first sentence feels a little strange to me, like are they really "creating" hardware, or something}
+  As hardware complexity continues to increase, though, verifying the hardware we design is becoming progressively more challenging, and we are beginning to see the limits of testbench-based verification.
+    %  2. State the problem you tackle.
+  Formally verifying hardware provides strong guarantees of correctness, but
+  comes at significant computational cost that scales poorly with design size.
+  %  3. Summarize (in one sentence) why nobody else has adequately answered the research question yet.
+  Inductive model checking algorithms have made great strides in reducing this
+  bottleneck, but are ultimately limited in how much information they can
+  extract from the \ac{rtl} designs they traditionally receive.
+  %  4. Explain, in one sentence, how you tackled the research question.
+  Hence, we argue that focusing on general-purpose model-checking algorithms is no longer the best fit for today's hardware design processes.
+  Hardware compilers increasingly provide high-level abstractions to improve designer productivity, but the structural information encoded in these abstractions is usually discarded in the verification process.
+  Instead, we propose building verification models from the high-level representations of the designs, allowing tools to make informed choices about the algorithms they use.
+  %  5. In one sentence, how did you go about doing the research that follows from your big idea.
+  By providing verification tooling with both a general-purpose RTL model checking algorithm and domain-specific algorithms, model checkers can verify faster without loss of generality.
+  %  6. As a single sentence, what’s the key impact of your research?
+  In this paper, we explore how a dedicated verification algorithm can be used to create a model checker that can verify any RTL design, but can also exploit explicit high-level finite state machine descriptions to provide faster verification times.
+  We demonstrate this approach with \toolname{}, a model checker built on the CIRCT framework, and show that it achieves a 35.8\% reduction (geomean) in model-checking time on real-world finite state machines over state-of-the-art RTL model checkers.
 
-%   % (http://www.easterbrook.ca/steve/2010/01/how-to-write-a-scientific-abstract-in-six-easy-steps/)
-% \end{abstract}
+  % (http://www.easterbrook.ca/steve/2010/01/how-to-write-a-scientific-abstract-in-six-easy-steps/)
+\end{abstract}
 
 % Only add ACM notes and keywords in camera ready version
 % Drop citations and footnotes in draft and blind mode.
