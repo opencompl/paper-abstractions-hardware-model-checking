@@ -54,12 +54,15 @@
 \usepackage{cleveref}
 \usepackage{subcaption}
 \usepackage{listings}
-% \usepackage{amsmath}
+\usepackage{amsmath}
 % \usepackage{thmtools} % required for autoref to lemmas
 \usepackage{algorithm}
 \usepackage{algorithmicx}
+\usepackage{tabularx}
 
-% \usepackage{siunitx}
+\usepackage{mathtools}
+\usepackage{siunitx}
+\usepackage{makecell}
 % \usepackage[svgnames]{xcolor}
 % \usepackage{minted}
 
@@ -395,37 +398,40 @@ The \texttt{hw.module} operation is an example of this --- it describes a hardwa
 We build upon CIRCT as it uses these concepts to provide various high-level abstractions for digital hardware, making it an ideal platform to demonstrate our approach
 
 \begin{figure}
-\begin{subfigure}{0.6\columnwidth}
-\begin{mlir}
-fsm.machine @fsm10() -> (i4) attributes {initialState = "A"} {
-  %cnt = fsm.variable "cnt" {initValue = 0 : i4} : i4
-  %c0 = hw.constant 0 : i4
-  %c1 = hw.constant 1 : i4
-  %c5 = hw.constant 5 : i4
-  fsm.state @A( ) output {
-    fsm.output %cnt : i4
-  } ( )transitions { 
-    fsm.transition @B
-  }
-  fsm.state @B( ) output {
-    fsm.output %cnt : i4
-  } ( )transitions {( )
-    ( *)fsm.transition @A guard {
-      %isFive = comb.icmp eq %cnt, %c5 : i1
-      fsm.return %isFive
-    } action {
-      fsm.update %cnt, %c0 : i4
-    }( )
-    ( )fsm.transition @B guard {
-      %isntFive = comb.icmp ne %cnt, %c5 : i1
-      fsm.return %isntFive
-    } action {
-      %newCnt = comb.add %cnt, %c1 : i4
-      fsm.update %cnt, %newCnt : i4
+\begin{subfigure}[T]{0.5\columnwidth}
+  \begin{mlir}
+  fsm.machine @fsm10() -> (i4) attributes {initialState = "A"} {
+    %cnt = fsm.variable "cnt" {initValue = 0 : i4} : i4
+    %c0 = hw.constant 0 : i4
+    %c1 = hw.constant 1 : i4
+    %c5 = hw.constant 5 : i4
+    fsm.state @A output {
+      fsm.output %cnt : i4
+    } transitions { 
+      fsm.transition @B
     }
-\end{mlir}
+    fsm.state @B( ) output {
+      fsm.output %cnt : i4
+    } ( )transitions {
+      fsm.transition @A guard {
+        %isFive = comb.icmp eq %cnt, %c5 : i1
+        fsm.return %isFive
+      } action {
+        fsm.update %cnt, %c0 : i4
+      }
+      fsm.transition @B guard {
+        %isntFive = comb.icmp ne %cnt, %c5 : i1
+        fsm.return %isntFive
+      } action {
+        %newCnt = comb.add %cnt, %c1 : i4
+        fsm.update %cnt, %newCnt : i4
+      }
+    }
+  }
+  \end{mlir}
 \end{subfigure}
-\begin{subfigure}[T]{0.39\columnwidth}
+\hfill
+\begin{subfigure}[T]{0.3\columnwidth}
   \includegraphics[width=\columnwidth]{fsm-dialect.pdf}
 \end{subfigure}
 \caption{The operations within CIRCT's \texttt{fsm} dialect describe the structure of a \ac{fsm}. 
@@ -828,8 +834,8 @@ The algorithm works as follows
   \item Inline the body of the module, and use canonicalization rules to propagate constants
 \end{enumerate}
 
-% Backwards constant propagation is added by adding the new rewrite rule
-% \[if(c,a,b) = n  \xRightarrow[]{isconst(if(c,a,b))}if(c, a = n, b = n)\]
+Backwards constant propagation is added by adding the new rewrite rule
+\[if(c,a,b) = n  \xRightarrow[]{isconst(if(c,a,b))}if(c, a = n, b = n)\]
 
 This rewrite rule is only a simplification under the condition $isconst(if(c,a,b))$, which is defined by
 
@@ -921,33 +927,33 @@ The verification process is described in \Cref{fig:fsm_extraction_workflow}.
 \end{figure}
 
 
-% \begin{table*}[t]
-% \centering
-% \caption{FSM Conversion and Verification Summary on OpenTitan FSMs}
-% \label{tab:fsm_conversion}
-% \begin{tabular}{l S[table-format=4.0] S[table-format=3.0] S[table-format=1.4] l l}
-% \toprule
-% \textbf{FSM Name} & {\textbf{SV LoC}} & {\textbf{MLIR LoC}} & {\textbf{Time (s)}} & \textbf{Status} & \textbf{Details} \\
-% \midrule
-% adc\_ctrl\_fsm                   &  391 & 320 &  1.1521 & BMC Correct & OK \\
-% aes\_cipher\_control\_fsm         &  515 & 319 &  0.2647 & BMC Correct & OK \\
-% aes\_ctr\_fsm                    &  125 &  47 &  0.0234 & BMC Correct & OK \\
-% darjeeling\_pwrmgr\_fsm          &  566 & 353 &  0.8507 & BMC Correct & OK \\
-% darjeeling\_pwrmgr\_slow\_fsm     &  337 & 189 &  0.2297 & BMC Correct & OK \\
-% earlgrey\_pwrmgr\_fsm            &  560 & 355 &  0.8822 & BMC Correct & OK \\
-% earlgrey\_pwrmgr\_slow\_fsm       &  364 & 200 &  0.2427 & BMC Correct & OK \\
-% englishbreakfast\_pwrmgr\_fsm    &  721 & 347 &  0.8046 & BMC Correct & OK \\
-% englishbreakfast\_pwrmgr\_slow\_fsm &  364 & 200 &  0.2424 & BMC Correct & OK \\
-% i2c\_controller\_fsm             &  993 & 644 &  8.9873 & BMC Correct & OK \\
-% i2c\_target\_fsm                 & 1042 & 651 &  5.3982 & BMC Correct & OK \\
-% \textcolor{red}{lc\_ctrl\_fsm}   &  \textcolor{red}{890} & \textcolor{red}{342} &  \textcolor{red}{1.3648} & \textcolor{red}{CRASH}  & \textcolor{red}{circt-opt: fsm-to-core} \\
-% mbx\_fsm                        &  177 & 138 &  0.0538 & BMC Correct & OK \\
-% rom\_ctrl\_fsm                   &  358 & 227 &  2.1657 & BMC Correct & OK \\
-% spi\_host\_fsm.sv                &  645 & 393 &  1.9216 & BMC Correct & OK \\
-% \bottomrule
-% \end{tabular}
-% \end{table*}
-% %% \end{figure}
+\begin{table*}[t]
+\centering
+\caption{FSM Conversion and Verification Summary on OpenTitan FSMs}
+\label{tab:fsm_conversion}
+\begin{tabular}{l S[table-format=4.0] S[table-format=3.0] S[table-format=1.4] l l}
+\toprule
+\textbf{FSM Name} & {\textbf{SV LoC}} & {\textbf{MLIR LoC}} & {\textbf{Time (s)}} & \textbf{Status} & \textbf{Details} \\
+\midrule
+adc\_ctrl\_fsm                   &  391 & 320 &  1.1521 & BMC Correct & OK \\
+aes\_cipher\_control\_fsm         &  515 & 319 &  0.2647 & BMC Correct & OK \\
+aes\_ctr\_fsm                    &  125 &  47 &  0.0234 & BMC Correct & OK \\
+darjeeling\_pwrmgr\_fsm          &  566 & 353 &  0.8507 & BMC Correct & OK \\
+darjeeling\_pwrmgr\_slow\_fsm     &  337 & 189 &  0.2297 & BMC Correct & OK \\
+earlgrey\_pwrmgr\_fsm            &  560 & 355 &  0.8822 & BMC Correct & OK \\
+earlgrey\_pwrmgr\_slow\_fsm       &  364 & 200 &  0.2427 & BMC Correct & OK \\
+englishbreakfast\_pwrmgr\_fsm    &  721 & 347 &  0.8046 & BMC Correct & OK \\
+englishbreakfast\_pwrmgr\_slow\_fsm &  364 & 200 &  0.2424 & BMC Correct & OK \\
+i2c\_controller\_fsm             &  993 & 644 &  8.9873 & BMC Correct & OK \\
+i2c\_target\_fsm                 & 1042 & 651 &  5.3982 & BMC Correct & OK \\
+\textcolor{red}{lc\_ctrl\_fsm}   &  \textcolor{red}{890} & \textcolor{red}{342} &  \textcolor{red}{1.3648} & \textcolor{red}{CRASH}  & \textcolor{red}{circt-opt: fsm-to-core} \\
+mbx\_fsm                        &  177 & 138 &  0.0538 & BMC Correct & OK \\
+rom\_ctrl\_fsm                   &  358 & 227 &  2.1657 & BMC Correct & OK \\
+spi\_host\_fsm.sv                &  645 & 393 &  1.9216 & BMC Correct & OK \\
+\bottomrule
+\end{tabular}
+\end{table*}
+%% \end{figure}
 
 % \begin{figure*}[t]
 %     \centering
@@ -1205,23 +1211,23 @@ None of these transformations took more than 2 seconds to finish.
   \label{fig:eval-structure}
 \end{figure}
 
-% \begin{table}[]
-%   \centering
-%   \small
-%   \caption{We use recent versions of all mentioned tools for our evaluation --- GitHub commit hashes are listed below.}
-%   \label{tab:commit-hashes}
-%   \begin{tabular}{cc}
-%     \toprule
-%     {\thead[t]{Tool}} & {\thead[t]{Commit Hash}} \\
-%     \midrule
-%     ABC          & b09305204 \\
-%     AVR          & 38a20b0 \\
-%     BtorMC       & 43dae91c \\
-%     btor2tools   & a1bb693 \\
-%     chctools     & 29aad20 \\
-%     rIC3         & db344f8 \\
-%     \end{tabular}
-%   \end{table}
+\begin{table}[]
+  \centering
+  \small
+  \caption{We use recent versions of all mentioned tools for our evaluation --- GitHub commit hashes are listed below.}
+  \label{tab:commit-hashes}
+  \begin{tabular}{cc}
+    \toprule
+    {\thead[t]{Tool}} & {\thead[t]{Commit Hash}} \\
+    \midrule
+    ABC          & b09305204 \\
+    AVR          & 38a20b0 \\
+    BtorMC       & 43dae91c \\
+    btor2tools   & a1bb693 \\
+    chctools     & 29aad20 \\
+    rIC3         & db344f8 \\
+    \end{tabular}
+  \end{table}
 
 \subsection{Evaluating \toolname{}'s RTL Engine}
 \label{sec:bmc-eval}
@@ -1310,28 +1316,28 @@ We generate two types of synthetic benchmarks, as detailed in \Cref{fig:benchmar
 \paragraph{Real-World FSMs:}
 \label{rw-para}
 
-% \begin{table}[]
-%   \centering
-%   \small
-%   \caption{We evaluate our tool on a suite of FSMs from real-world EDA flows which vary in size and complexity.}
-%   \label{tab:real-world-fsms}
-%   \begin{tabularx}{\columnwidth}{@{\extracolsep{\fill}}l @{} S[table-format=3.0] @{} S[table-format=2.0] @{} S[table-format=2.0] @{} S[table-format=2.0] @{} S[table-format=2.0]}
-%       \toprule
-%       {\bfseries FSM}           & {\thead[t]{Transitions\\(\#)}} & {\thead[t]{States\\(\#)}} & {\thead[t]{Inputs\\(\#)}} & {\thead[t]{Variables\\(\#)}} & {\thead[t]{Outputs\\(\#)}} \\
-%     \midrule
-%     hls1          & 141   & 72  & 3   & 23  & 15  \\
-%     hls2          & 33    & 24  & 2   & 19  & 12  \\
-%     hls3          & 57    & 36  & 2   & 19  & 12  \\
-%     hls4          & 18    & 18  & 1   & 15  & 9   \\
-%     hls5          & 20    & 20  & 1   & 16  & 9   \\
-%     hls6          & 142   & 70  & 2   & 17  & 12  \\
-%     opentitan1    & 5     & 3   & 4   & 3   & 3   \\
-%     opentitan2    & 14    & 7   & 7   & 0   & 3   \\
-%     pulp1         & 32    & 16  & 1   & 0   & 7   \\
-%     \bottomrule
-%     \end{tabularx}
-% \arjun{maybe caption more like: We evaluate our tool on a benchmark suite of FSMs encompassing a wide variety of sizes and complexities.}
-% \end{table}  
+\begin{table}[]
+  \centering
+  \small
+  \caption{We evaluate our tool on a suite of FSMs from real-world EDA flows which vary in size and complexity.}
+  \label{tab:real-world-fsms}
+  \begin{tabularx}{\columnwidth}{@{\extracolsep{\fill}}l @{} S[table-format=3.0] @{} S[table-format=2.0] @{} S[table-format=2.0] @{} S[table-format=2.0] @{} S[table-format=2.0]}
+      \toprule
+      {\bfseries FSM}           & {\thead[t]{Transitions\\(\#)}} & {\thead[t]{States\\(\#)}} & {\thead[t]{Inputs\\(\#)}} & {\thead[t]{Variables\\(\#)}} & {\thead[t]{Outputs\\(\#)}} \\
+    \midrule
+    hls1          & 141   & 72  & 3   & 23  & 15  \\
+    hls2          & 33    & 24  & 2   & 19  & 12  \\
+    hls3          & 57    & 36  & 2   & 19  & 12  \\
+    hls4          & 18    & 18  & 1   & 15  & 9   \\
+    hls5          & 20    & 20  & 1   & 16  & 9   \\
+    hls6          & 142   & 70  & 2   & 17  & 12  \\
+    opentitan1    & 5     & 3   & 4   & 3   & 3   \\
+    opentitan2    & 14    & 7   & 7   & 0   & 3   \\
+    pulp1         & 32    & 16  & 1   & 0   & 7   \\
+    \bottomrule
+    \end{tabularx}
+\arjun{maybe caption more like: We evaluate our tool on a benchmark suite of FSMs encompassing a wide variety of sizes and complexities.}
+\end{table}  
 
 While generated \acp{fsm} are useful for evaluating how our approaches scale, we also
 wish to ensure that our techniques work well on hardware structures and
