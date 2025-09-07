@@ -53,6 +53,7 @@
 \usepackage{acronym}
 \usepackage{cleveref}
 \usepackage{subcaption}
+\usepackage{listings}
 % \usepackage{amsmath}
 % \usepackage{thmtools} % required for autoref to lemmas
 \usepackage{algorithm}
@@ -160,7 +161,7 @@
 \csname #1 \endcsname
 }
 
-\newdelimitedcommand{toolname}{Tool}
+\newdelimitedcommand{toolname}{EDAMAME}
 
 \usepackage{booktabs}
 % \newcommand{\ra}[1]{\renewcommand{\arraystretch}{#1}}
@@ -314,7 +315,7 @@
 \section{Introduction}
 %https://docs.google.com/drawings/d/10er9hoqEd7plWkHKglRiU2ZM8l2--GmrLL4rrr-YIkw/edit?usp=sharing
 \begin{figure}
-  \includegraphics[width=\columnwidth]{core-idea.pdf}
+  \includegraphics[width=0.8\columnwidth]{core-idea.pdf}
   \caption{We propose providing a tool with domain-specific algorithms to verify designs with high-level abstractions, falling back to general-purpose model checking algorithms when no applicable domain-specific algorithm is known.} \label{fig:intro-verif}
 \end{figure}
 
@@ -393,65 +394,44 @@ Some operations also have \textit{regions} associated with them, each of which i
 The \texttt{hw.module} operation is an example of this --- it describes a hardware module, and has a region describing the module's contents.
 We build upon CIRCT as it uses these concepts to provide various high-level abstractions for digital hardware, making it an ideal platform to demonstrate our approach
 
-% \definecolor{col1}{HTML}{e31a1c}
-% \def\speciallstcolor{\begingroup\color{col1}}
-% \def\endspeciallstcolor{\endgroup}
-
-% \definecolor{col2}{HTML}{1f78b4}
-% \def\speciallstcolorbis{\begingroup\color{col2}}
-% \def\endspeciallstcolorbis{\endgroup}
-
-% \definecolor{col3}{HTML}{33a02c}
-% \def\speciallstcolorter{\begingroup\color{col3}}
-% \def\endspeciallstcolorter{\endgroup}
-
-% \definecolor{col4}{HTML}{cacaca}
-% \def\speciallstcolorqua{\begingroup\color{col4}}
-% \def\endspeciallstcolorqua{\endgroup}
-% % \def\speciallstcolor2{\begingroup\color{\definecolor{col2}{1f78b4}}}
-% % \def\endspeciallstcolor{\endgroup}
-% \lstset{escapeinside={<@}{@>}}
-% \begin{figure}[h]
-  
-%   \begin{subfigure}[T]{0.6\columnwidth}
-% \begin{lstlisting}[escapeinside={(*@}{@*)}, basicstyle=\tiny\ttfamily]
-% (*@\aftergroup\speciallstcolorqua@*)fsm.machine @fsm10() -> (i4) attributes {initialState = "A"} {
-%   %cnt = fsm.variable "cnt" {initValue = 0 : i4} : i4
-%   %c0 = hw.constant 0 : i4
-%   %c1 = hw.constant 1 : i4
-%   %c5 = hw.constant 5 : i4
-%   fsm.state @A(*@\aftergroup\endspeciallstcolorqua@*) output {
-%     fsm.output %cnt : i4
-%   } (*@\aftergroup\speciallstcolorqua@*)transitions { 
-%     fsm.transition @B
-%   }
-%   fsm.state @B(*@\aftergroup\endspeciallstcolorqua@*) output {
-%     fsm.output %cnt : i4
-%   } (*@\aftergroup\speciallstcolorqua@*)transitions {(*@\aftergroup\endspeciallstcolorqua@*)
-%     (*@\aftergroup\speciallstcolor@*)fsm.transition @A guard {
-%       %isFive = comb.icmp eq %cnt, %c5 : i1
-%       fsm.return %isFive
-%     } action {
-%       fsm.update %cnt, %c0 : i4
-%     }(*@\aftergroup\endspeciallstcolor@*)
-%     (*@\aftergroup\speciallstcolorbis@*)fsm.transition @B guard {
-%       %isntFive = comb.icmp ne %cnt, %c5 : i1
-%       fsm.return %isntFive
-%     } action {
-%       %newCnt = comb.add %cnt, %c1 : i4
-%       fsm.update %cnt, %newCnt : i4
-%     }(*@\aftergroup\endspeciallstcolorbis@*)
-%   (*@\aftergroup\speciallstcolorqua@*)}
-% }(*@\aftergroup\endspeciallstcolorqua@*)
-% \end{lstlisting}
-% \end{subfigure}
-%   \begin{subfigure}[T]{0.39\columnwidth}
-%     \includegraphics[width=\columnwidth]{fsm-dialect.pdf}
-% \end{subfigure}
-%   \caption{The operations within CIRCT's \texttt{fsm} dialect describe the structure of a \ac{fsm}. 
-%   We highlight the operations that explicitly capture its behavior.}
-%   \label{fig:fsm-struc}
-% \end{figure}
+\begin{figure}
+\begin{subfigure}{0.6\columnwidth}
+\begin{mlir}
+fsm.machine @fsm10() -> (i4) attributes {initialState = "A"} {
+  %cnt = fsm.variable "cnt" {initValue = 0 : i4} : i4
+  %c0 = hw.constant 0 : i4
+  %c1 = hw.constant 1 : i4
+  %c5 = hw.constant 5 : i4
+  fsm.state @A( ) output {
+    fsm.output %cnt : i4
+  } ( )transitions { 
+    fsm.transition @B
+  }
+  fsm.state @B( ) output {
+    fsm.output %cnt : i4
+  } ( )transitions {( )
+    ( *)fsm.transition @A guard {
+      %isFive = comb.icmp eq %cnt, %c5 : i1
+      fsm.return %isFive
+    } action {
+      fsm.update %cnt, %c0 : i4
+    }( )
+    ( )fsm.transition @B guard {
+      %isntFive = comb.icmp ne %cnt, %c5 : i1
+      fsm.return %isntFive
+    } action {
+      %newCnt = comb.add %cnt, %c1 : i4
+      fsm.update %cnt, %newCnt : i4
+    }
+\end{mlir}
+\end{subfigure}
+\begin{subfigure}[T]{0.39\columnwidth}
+  \includegraphics[width=\columnwidth]{fsm-dialect.pdf}
+\end{subfigure}
+\caption{The operations within CIRCT's \texttt{fsm} dialect describe the structure of a \ac{fsm}. 
+We highlight the operations that explicitly capture its behavior.}
+\label{fig:fsm-struc}
+\end{figure}
 
   
 \subsubsection{FSM Representations}
