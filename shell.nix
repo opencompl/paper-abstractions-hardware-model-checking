@@ -46,5 +46,6 @@ pkgs.mkShell {
     pkgs.python3
     pkgs.gnumake
     pkgs.which
+    pkgs.evince
   ];
 }
